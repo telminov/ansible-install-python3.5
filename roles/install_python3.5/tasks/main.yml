@@ -27,8 +27,8 @@
 
 - name: Install
   shell: make install chdir=/tmp/Python-3.5.1
-  became: yes
-  became_user: root
+  become: yes
+  become_user: root
 
 - name: Remove tmp files
   file: path={{ item }} state=absent
