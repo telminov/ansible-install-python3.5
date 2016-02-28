@@ -1,0 +1,39 @@
+---
+- name: Update apt-cache
+  apt: update_cache=yes
+
+- name: Install packages
+  apt: pkg={{ item }}
+  with_items:
+    - wget
+    - xz-utils
+    - build-essential
+    - libsqlite3-dev
+    - libreadline-dev
+    - libssl-dev
+    - openssl
+
+- name: Download python tar.xz
+  get_url: url=https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz dest=/tmp/Python.tar.xz
+
+- name: Extract
+  shell: tar -xf Python.tar.xz chdir=/tmp
+
+- name: Configure
+  shell: ./configure chdir=/tmp/Python-3.5.1
+
+- name: Make
+  shell: make chdir=/tmp/Python-3.5.1
+
+- name: Install
+  shell: make install chdir=/tmp/Python-3.5.1
+  became: yes
+  became_user: root
+
+- name: Remove tmp files
+  file: path={{ item }} state=absent
+  with_items:
+    - /tmp/Python.tar.xz
+    - /tmp/Python-3.5.1
+
+
